@@ -5,14 +5,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from utils.logger import setup_logger
 import os
-from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from selenium.common import WebDriverException, TimeoutException
 from selenium import webdriver
 from typing import Dict
-import undetected_chromedriver as uc
-load_dotenv()
 
+SELENIUM_REMOTE_URL = os.getenv("SELENIUM_REMOTE_URL")
 STATE = os.getenv("STATE")
 logger = setup_logger("scraper")
 
@@ -23,7 +21,10 @@ async def get_cookies_from_website(url: str) -> Dict[str, str]:
         options = webdriver.ChromeOptions()
         options.headless = True
         options.page_load_strategy = 'eager'
-        driver = uc.Chrome(options=options)
+        driver = webdriver.Remote(
+            command_executor=SELENIUM_REMOTE_URL,
+            options=options
+        )
         try:
             driver.get("https://businessfilings.sc.gov/BusinessFiling/Entity/Search")
             input_field = WebDriverWait(driver, 15).until(
