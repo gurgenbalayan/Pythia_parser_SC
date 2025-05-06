@@ -42,6 +42,7 @@ async def get_cookies_from_website(url: str) -> Dict[str, str]:
             options=options
         )
         try:
+            driver.set_page_load_timeout(30)
             driver.get("https://businessfilings.sc.gov/BusinessFiling/Entity/Search")
             input_field = WebDriverWait(driver, 15).until(
                 EC.element_to_be_clickable((By.TAG_NAME, "input")))
